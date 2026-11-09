@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f7fb">
+  <meta
+    name="description"
+    content="Analisa e melhora vídeos com sugestões de IA e processamento local."
+  >
   <title>Melhorar vídeo com IA</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,9 +22,14 @@
     </header>
 
     <p class="intro">
-      Envia o vídeo e escolhe o nível de processamento. A IA analisa a imagem
-      e aplica automaticamente os ajustes.
+      A IA sugere os ajustes. A comparação e a exportação do vídeo são feitas
+      localmente no teu dispositivo.
     </p>
+
+    <aside class="panel ad-slot ad-banner" aria-label="Espaço publicitário">
+      <span>Espaço publicitário</span>
+      <small>Banner responsivo</small>
+    </aside>
 
     <form id="editorForm">
       <section class="panel">
@@ -29,7 +38,9 @@
         <label class="upload-area" for="video">
           <span class="upload-icon" aria-hidden="true">↑</span>
           <span class="upload-title">Seleciona um vídeo do teu dispositivo</span>
-          <span class="upload-hint">Formatos de vídeo · Limite de 500 MB</span>
+          <span class="upload-hint">
+            Formatos suportados pelo browser · Limite de 500 MB
+          </span>
           <input
             id="video"
             name="video"
@@ -53,7 +64,7 @@
               <span class="quality-tag">Mais rápido</span>
             </span>
             <span class="quality-description">
-              Ajustes automáticos e resolução original. Ideal para um resultado rápido.
+              Ajustes subtis, com processamento local mais leve.
             </span>
           </span>
         </label>
@@ -66,7 +77,7 @@
               <span class="quality-tag">Equilibrado</span>
             </span>
             <span class="quality-description">
-              Mais nitidez e boa qualidade, sem aumentar vídeos pequenos.
+              Equilíbrio entre nitidez e desempenho.
             </span>
           </span>
         </label>
@@ -76,23 +87,23 @@
           <span class="quality-card">
             <span class="quality-heading">
               <strong>Muito nítido</strong>
-              <span class="quality-tag quality-tag-highlight">Maior qualidade</span>
+              <span class="quality-tag quality-tag-highlight">Mais exigente</span>
             </span>
             <span class="quality-description">
-              Processamento mais demorado e ficheiro potencialmente maior.
+              Mais nitidez; pode demorar mais e consumir mais recursos.
             </span>
           </span>
         </label>
       </fieldset>
 
-      <button id="submitButton" type="submit">
-        <span class="button-icon" aria-hidden="true">✦</span>
-        <span id="buttonText">Melhorar vídeo com IA</span>
+      <button id="submitButton" class="primary-button" type="submit">
+        <span aria-hidden="true">✦</span>
+        <span id="buttonText">Analisar vídeo com IA</span>
       </button>
 
       <div id="loadingIndicator" class="loading-indicator" hidden>
         <span class="spinner" aria-hidden="true"></span>
-        <span id="loadingText">A IA está a analisar o vídeo…</span>
+        <span id="loadingText">A preparar os fotogramas…</span>
       </div>
 
       <p id="status" class="status" role="status" aria-live="polite"></p>
@@ -101,28 +112,101 @@
     <section id="result" class="panel result-panel" hidden>
       <div class="result-heading">
         <div>
-          <p class="eyebrow">PROCESSAMENTO CONCLUÍDO</p>
-          <h2>O teu vídeo está pronto</h2>
+          <p class="eyebrow">ANÁLISE CONCLUÍDA</p>
+          <h2>Pré-visualiza o resultado</h2>
         </div>
         <span id="resultBadge" class="result-badge">IA</span>
       </div>
 
-      <video id="preview" controls playsinline></video>
+      <p class="comparison-help">
+        Arrasta o controlo para comparar o vídeo original com os ajustes.
+      </p>
+
+      <div id="comparison" class="comparison" style="--split: 50%">
+        <video
+          id="preview"
+          controls
+          playsinline
+          preload="metadata"
+          aria-label="Pré-visualização do vídeo original"
+        ></video>
+
+        <div id="processedLayer" class="processed-layer" aria-hidden="true">
+          <canvas id="processedCanvas"></canvas>
+        </div>
+
+        <span class="comparison-label label-before">Original</span>
+        <span class="comparison-label label-after">Melhorado</span>
+        <span class="comparison-divider" aria-hidden="true"></span>
+      </div>
+
+      <label class="slider-label" for="comparisonSlider">
+        Comparação antes/depois
+      </label>
+      <input
+        id="comparisonSlider"
+        class="comparison-slider"
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        aria-label="Desliza para comparar o original com o vídeo melhorado"
+      >
 
       <p id="explanation" class="explanation"></p>
 
-      <a id="download" class="download" download="video-melhorado.mp4">
-        <span aria-hidden="true">↓</span>
-        Baixar vídeo melhorado
+      <aside class="panel ad-slot ad-square" aria-label="Espaço publicitário">
+        <span>Espaço publicitário</span>
+        <small>Bloco quadrado</small>
+      </aside>
+
+      <p class="export-note">
+        A exportação é feita neste dispositivo. O formato disponível depende
+        do browser; a maioria dos browsers compatíveis exporta em WebM.
+      </p>
+
+      <button id="downloadButton" class="download-button" type="button">
+        Preparar vídeo para download
+      </button>
+
+      <a id="downloadLink" class="download-link" hidden>
+        Descarregar vídeo melhorado
       </a>
+
+      <p id="exportStatus" class="export-status" role="status" aria-live="polite"></p>
+      <progress id="exportProgress" class="export-progress" max="100" value="0" hidden></progress>
     </section>
 
     <p class="footnote">
-      Aumentar a resolução pode criar um ficheiro maior, mas não recupera
-      detalhes que não existam no vídeo original.
+      Os ajustes melhoram a aparência, mas não recuperam detalhes que não
+      existem no vídeo original. Vídeos grandes podem exigir bastante memória.
     </p>
   </main>
 
-  <script src="app.js"></script>
+  <dialog id="downloadModal" class="download-modal">
+    <form method="dialog" class="modal-close-form">
+      <button class="modal-close" aria-label="Fechar janela">×</button>
+    </form>
+    <p class="eyebrow">EXPORTAÇÃO LOCAL</p>
+    <h2>Preparar o teu vídeo</h2>
+    <p>
+      O vídeo será processado no teu dispositivo e não será enviado ao servidor
+      para exportação. A gravação decorre aproximadamente à velocidade de
+      reprodução.
+    </p>
+    <p class="modal-small">
+      O formato e a inclusão de áudio dependem do suporte do teu browser.
+    </p>
+    <div class="modal-actions">
+      <button id="confirmExport" class="primary-button" type="button">
+        Iniciar exportação
+      </button>
+      <button id="cancelExport" class="secondary-button" type="button">
+        Cancelar
+      </button>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
