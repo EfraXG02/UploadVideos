@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>Melhorar vídeo com IA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="page-header">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <div>
+        <p class="eyebrow">EDITOR INTELIGENTE</p>
+        <h1>Melhorar vídeo com IA</h1>
+      </div>
+    </header>
+
+    <p class="intro">
+      Envia o vídeo e escolhe o nível de processamento. A IA analisa a imagem
+      e aplica automaticamente os ajustes.
+    </p>
+
+    <form id="editorForm">
+      <section class="panel">
+        <label class="section-label" for="video">1. Escolhe um vídeo</label>
+
+        <label class="upload-area" for="video">
+          <span class="upload-icon" aria-hidden="true">↑</span>
+          <span class="upload-title">Seleciona um vídeo do teu dispositivo</span>
+          <span class="upload-hint">Formatos de vídeo · Limite de 500 MB</span>
+          <input
+            id="video"
+            name="video"
+            type="file"
+            accept="video/*"
+            required
+          >
+        </label>
+
+        <p id="fileInfo" class="file-info" aria-live="polite"></p>
+      </section>
+
+      <fieldset class="panel quality-panel">
+        <legend class="section-label">2. Escolhe o nível de melhoria</legend>
+
+        <label class="quality-option">
+          <input type="radio" name="quality" value="basic">
+          <span class="quality-card">
+            <span class="quality-heading">
+              <strong>Básico</strong>
+              <span class="quality-tag">Mais rápido</span>
+            </span>
+            <span class="quality-description">
+              Ajustes automáticos e resolução original. Ideal para um resultado rápido.
+            </span>
+          </span>
+        </label>
+
+        <label class="quality-option">
+          <input type="radio" name="quality" value="medium" checked>
+          <span class="quality-card">
+            <span class="quality-heading">
+              <strong>Médio</strong>
+              <span class="quality-tag">Equilibrado</span>
+            </span>
+            <span class="quality-description">
+              Mais nitidez e boa qualidade, sem aumentar vídeos pequenos.
+            </span>
+          </span>
+        </label>
+
+        <label class="quality-option">
+          <input type="radio" name="quality" value="high">
+          <span class="quality-card">
+            <span class="quality-heading">
+              <strong>Muito nítido</strong>
+              <span class="quality-tag quality-tag-highlight">Maior qualidade</span>
+            </span>
+            <span class="quality-description">
+              Processamento mais demorado e ficheiro potencialmente maior.
+            </span>
+          </span>
+        </label>
+      </fieldset>
+
+      <button id="submitButton" type="submit">
+        <span class="button-icon" aria-hidden="true">✦</span>
+        <span id="buttonText">Melhorar vídeo com IA</span>
+      </button>
+
+      <div id="loadingIndicator" class="loading-indicator" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="loadingText">A IA está a analisar o vídeo…</span>
+      </div>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </form>
+
+    <section id="result" class="panel result-panel" hidden>
+      <div class="result-heading">
+        <div>
+          <p class="eyebrow">PROCESSAMENTO CONCLUÍDO</p>
+          <h2>O teu vídeo está pronto</h2>
+        </div>
+        <span id="resultBadge" class="result-badge">IA</span>
+      </div>
+
+      <video id="preview" controls playsinline></video>
+
+      <p id="explanation" class="explanation"></p>
+
+      <a id="download" class="download" download="video-melhorado.mp4">
+        <span aria-hidden="true">↓</span>
+        Baixar vídeo melhorado
+      </a>
+    </section>
+
+    <p class="footnote">
+      Aumentar a resolução pode criar um ficheiro maior, mas não recupera
+      detalhes que não existam no vídeo original.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
