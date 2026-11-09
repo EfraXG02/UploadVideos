@@ -12,6 +12,9 @@
       "dest": "server.js"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/outputs/(.*)",
       "dest": "outputs/$1"
     },
