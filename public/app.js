@@ -256,7 +256,7 @@ function revokeExportUrl() {
 }
 
 videoInput.addEventListener("change", () => {
-  const file = videoInput.files;
+  const file = videoInput.files[0];
 
   revokeExportUrl();
   downloadLink.hidden = true;
@@ -275,7 +275,7 @@ videoInput.addEventListener("change", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const file = videoInput.files;
+  const file = videoInput.files[0];
 
   if (!file) {
     statusText.textContent = "Seleciona um vídeo primeiro.";
