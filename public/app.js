@@ -46,7 +46,6 @@ function formatFileSize(bytes) {
   if (bytes < 1024 * 1024) {
     return `${(bytes / 1024).toFixed(0)} KB`;
   }
-
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
@@ -76,69 +75,12 @@ async function waitForMetadata(video) {
   if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
     return;
   }
-
   await waitForMediaEvent(video, "loadedmetadata");
 }
 
 function selectedQuality() {
   return form.querySelector('input[name="quality"]:checked')?.value || "medium";
 }
-
-function makeSmallFrame(video, second) {
-  return new Promise((resolve, reject) => {
-    const originalTime = video.currentTime;
-    const wasPlaying = !video.paused;
-
-    const finish = async () => {
-      try {
-        const maxWidth = 640;
-        const scale = Math.min(1, maxWidth / video.videoWidth);
-        const width = Math.max(1, Math.round(video.videoWidth * scale));
-        const height = Math.max(1, Math.round(video.videoHeight * scale));
-
-        const frameCanvas = document.createElement("canvas");
-        frameCanvas.width = width;
-        frameCanvas.height = height;
-
-        const context = frameCanvas.getContext("2d");
-        context.drawImage(video, 0, 0, width, height);
-
-        const dataUrl = frameCanvas.toDataURL("image/jpeg", 0.68);
-
-        if (wasPlaying) {
-          video.play().catch(() => {});
-        }
-
-        resolve(dataUrl);
-      } catch (error) {
-        reject(error);
-      }
-    };
-
-    if (Math.abs(video.currentTime - second) < 0.05) {
-      finish();
-      return;
-    }
-
-    const onSeeked = () => {
-      video.removeEventListener("seeked", onSeeked);
-      finish();
-    };
-
-    video.addEventListener("seeked", onSeeked, { once: true });
-
-    try {
-      video.currentTime = second;
-    } catch (error) {
-      video.removeEventListener("seeked", onSeeked);
-      reject(error);
-    }
-
-    // O tempo inicial é usado para restaurar o reprodutor após a análise.
-    video.dataset.previousTime = String(originalTime);
-  });
-}
-
 async function extractFrames(file) {
   if (sourceVideoUrl) {
     URL.revokeObjectURL(sourceVideoUrl);
@@ -163,6 +105,7 @@ async function extractFrames(file) {
   const sampleTimes = duration > 0
     ? [...new Set([0, duration * 0.4, Math.max(0, duration - 0.25)])]
     : [0];
+
 
   const frames = [];
 
@@ -221,7 +164,6 @@ function applySharpen(amount) {
   const width = processedCanvas.width;
   const height = processedCanvas.height;
 
-  // Limitar la nitidez evita amplificar demasiado o criar halos.
   const strength = Math.min(0.3, amount * 0.22);
   if (strength < 0.01 || width < 3 || height < 3) return;
 
@@ -284,7 +226,6 @@ function renderProcessedFrame() {
   canvasContext.filter = "none";
   applySharpen(adjustments.sharpness);
 }
-
 function startRenderLoop() {
   cancelAnimationFrame(renderFrameId);
   lastRenderTime = 0;
@@ -315,7 +256,7 @@ function revokeExportUrl() {
 }
 
 videoInput.addEventListener("change", () => {
-  const file = videoInput.files[0];
+  const file = videoInput.files;
 
   revokeExportUrl();
   downloadLink.hidden = true;
@@ -334,7 +275,7 @@ videoInput.addEventListener("change", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const file = videoInput.files[0];
+  const file = videoInput.files;
 
   if (!file) {
     statusText.textContent = "Seleciona um vídeo primeiro.";
@@ -453,7 +394,6 @@ downloadButton.addEventListener("click", () => {
       "Este browser não suporta a janela de exportação necessária.";
   }
 });
-
 cancelExport.addEventListener("click", () => {
   downloadModal.close();
 });
@@ -469,7 +409,6 @@ function chooseRecordingType() {
     "video/webm;codecs=vp8,opus",
     "video/webm"
   ];
-
   return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
 }
 
@@ -562,7 +501,6 @@ async function exportVideoLocally() {
         exportStatus.textContent =
           `A exportar localmente… ${Math.round(exportProgress.value)}%`;
       }
-
       renderProcessedFrame();
     };
 
@@ -628,3 +566,30 @@ window.addEventListener("beforeunload", () => {
   if (sourceVideoUrl) URL.revokeObjectURL(sourceVideoUrl);
   if (exportedVideoUrl) URL.revokeObjectURL(exportedVideoUrl);
 });
+
+const privacyBtn = document.getElementById("privacyBtn");
+const privacyModal = document.getElementById("privacyModal");
+const closePrivacyModal = document.getElementById("closePrivacyModal");
+
+if (privacyBtn && privacyModal && closePrivacyModal) {
+  privacyBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    privacyModal.showModal();
+  });
+
+  closePrivacyModal.addEventListener("click", () => {
+    privacyModal.close();
+  });
+
+  privacyModal.addEventListener("click", (e) => {
+    const dialogDimensions = privacyModal.getBoundingClientRect();
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      privacyModal.close();
+    }
+  });
+}

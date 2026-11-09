@@ -587,41 +587,91 @@ h1 {
   font-weight: 700;
 }
 
-@media (max-width: 520px) {
-  body {
-    padding: 28px 14px;
-  }
-
-  .panel {
-    padding: 18px;
-    border-radius: 15px;
-  }
-
-  .brand-mark {
-    width: 43px;
-    height: 43px;
-  }
-
-  .quality-heading {
-    align-items: flex-start;
-  }
-
-  .ad-banner {
-    min-height: 76px;
-  }
-
-  .comparison {
-    border-radius: 10px;
-  }
+/* --- Rodapé Institucional Exigido pelo AdSense --- */
+.page-footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
 }
 
+.page-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.page-footer a:hover {
+  text-decoration: underline;
+}
+
+/* --- Janela Modal de Privacidade Nativa () --- */
+.privacy-modal {
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 28px;
+background: var(--surface);
+box-shadow: 0 25px 80px rgba(18, 26, 44, 0.25);
+max-width: 550px;
+width: min(calc(100% - 32px), 550px);
+}
+.privacy-modal::backdrop {
+background: rgba(15, 20, 34, 0.58);
+backdrop-filter: blur(3px);
+}
+.privacy-modal h2 {
+margin-top: 5px;
+margin-bottom: 12px;
+font-size: 23px;
+letter-spacing: -0.02em;
+}
+.modal-body {
+color: var(--muted);
+font-size: 14px;
+line-height: 1.6;
+margin: 15px 0;
+}
+.modal-body ul {
+padding-left: 20px;
+margin-top: 10px;
+}
+.modal-body li {
+margin-bottom: 10px;
+}
+.privacy-modal .primary-button {
+width: 100%;
+margin-top: 15px;
+}
+/* --- Media Queries Responsivas --- */
+@media (max-width: 520px) {
+body {
+padding: 28px 14px;
+}
+.panel {
+padding: 18px;
+border-radius: 15px;
+}
+.brand-mark {
+width: 43px;
+height: 43px;
+}
+.quality-heading {
+align-items: flex-start;
+}
+.ad-banner {
+min-height: 76px;
+}
+.comparison {
+border-radius: 10px;
+}
+}
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+*,
+*::before,
+*::after {
+scroll-behavior: auto !important;
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+}
 }
